@@ -30,6 +30,9 @@ We figured out how to separate inputs and group terms together, how to simplify 
 
 The MVP features that don't work yet are the quotient, product, and chain rule.
 
+Tests: All current JUnit tests pass. The new rules (product, quotient, chain) have no tests yet.
+Bad input: The bad-input cases from our scope (unsupported characters, unmatched or empty parentheses, leading/trailing operators, two operators in a row, missing *) are caught in InputReader, and Main re-prompts. Bad input involving the unfinished rules is not handled yet.
+
  ## Next Steps
 
  **Finish the MVP, in order:**
