@@ -49,7 +49,7 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 
 **Who does what:**
 - Owen - Main changes, plus tests
-- Ari - 
+- Ari - Chain, product, and quotient rule
 - Ehren - 
 - Muna - Input reader allowing more difficult equations 
 
@@ -71,4 +71,4 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 | Token | Owen | wrote, revised, reviewed, tested |
 | TokenTest | Owen | wrote, revised, reviewed, tested |
 
-**GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: Had claude help with junit testing and implementing linkchain / token system. Ari: [your note]. Ehren: [your note].
+**GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: Had claude help with junit testing and implementing linkchain / token system. Ari: Had Gemini brainstorm ideas on how to separate the terms and debug. Ehren: [your note].
