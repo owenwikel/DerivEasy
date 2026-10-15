@@ -13,17 +13,17 @@ import java.util.Arrays;
 public class DifferentiationTestClass
     extends TestCase
 {
-    LinkedChain<Node> equation1;
-    LinkedChain<Node> equation2;
+    LinkedChain<Token> equation1;
+    LinkedChain<Token> equation2;
     String[] term1;
     String[] term2;
 
     public void setUp()
     {
-        equation1 = new LinkedChain<Node>();
-        equation1.add("3");
-        equation2 = new LinkedChain<Node>();
-        equation2.add("x");
+        equation1 = new LinkedChain<Token>();
+        equation1.add(new Token("NUMBER", "3"));
+        equation2 = new LinkedChain<Token>();
+        equation2.add(new Token("VARIABLE", "x"));
         term1 = new String[1];
         term2 = new String[1];
         term1[0] = "3";
@@ -116,10 +116,10 @@ public class DifferentiationTestClass
                 test2,
                 toArray(Differentiation.differentiate(equation2))));
 
-        equation1.addToEnd("*");
-        equation1.addToEnd("x");
-        equation2.addToEnd("^");
-        equation2.addToEnd("2");
+        equation1.addToEnd(new Token("OPERATOR", "*"));
+        equation1.addToEnd(new Token("VARIABLE", "x"));
+        equation2.addToEnd(new Token("OPERATOR", "^"));
+        equation2.addToEnd(new Token("NUMBER", "2"));
         String[] test3 = new String[1];
         String[] test4 = new String[3];
         test3[0] = "3";
@@ -135,8 +135,8 @@ public class DifferentiationTestClass
                 test4,
                 toArray(Differentiation.differentiate(equation2))));
 
-        equation2.remove("2");
-        equation2.addToEnd("3");
+        equation2.remove(new Token("NUMBER", "2"));
+        equation2.addToEnd(new Token("NUMBER", "3"));
         String[] test5 = new String[5];
         test5[0] = "3";
         test5[1] = "*";
@@ -149,11 +149,11 @@ public class DifferentiationTestClass
                 toArray(Differentiation.differentiate(equation2))));
 
         equation1.clear();
-        equation1.addToEnd("3");
-        equation1.addToEnd("*");
-        equation1.addToEnd("x");
-        equation1.addToEnd("^");
-        equation1.addToEnd("3");
+        equation1.addToEnd(new Token("NUMBER", "3"));
+        equation1.addToEnd(new Token("OPERATOR", "*"));
+        equation1.addToEnd(new Token("VARIABLE", "x"));
+        equation1.addToEnd(new Token("OPERATOR", "^"));
+        equation1.addToEnd(new Token("NUMBER", "3"));
         String[] test6 = new String[5];
         test6[0] = "9";
         test6[1] = "*";
@@ -166,11 +166,11 @@ public class DifferentiationTestClass
                 toArray(Differentiation.differentiate(equation1))));
 
         equation1.clear();
-        equation1.addToEnd("3");
-        equation1.addToEnd("*");
-        equation1.addToEnd("x");
-        equation1.addToEnd("^");
-        equation1.addToEnd("2");
+        equation1.addToEnd(new Token("NUMBER", "3"));
+        equation1.addToEnd(new Token("OPERATOR", "*"));
+        equation1.addToEnd(new Token("VARIABLE", "x"));
+        equation1.addToEnd(new Token("OPERATOR", "^"));
+        equation1.addToEnd(new Token("NUMBER", "2"));
         String[] test7 = new String[3];
         test7[0] = "6";
         test7[1] = "*";
@@ -179,5 +179,24 @@ public class DifferentiationTestClass
             Arrays.equals(
                 test7,
                 toArray(Differentiation.differentiate(equation1))));
+    }
+    
+    
+    /**
+     * Converts a chain of Tokens into an array of their values.
+     * Added so tests can compare a chain to an expected String array.
+     *
+     * @param chain the chain to convert
+     * @return the values of the chain's Tokens, in order
+     */
+    private String[] toArray(LinkedChain<Token> chain)
+    {
+        Token[] tokens = chain.toArray(new Token[chain.size()]);
+        String[] values = new String[tokens.length];
+        for (int i = 0; i < tokens.length; i++)
+        {
+            values[i] = tokens[i].getValue();
+        }
+        return values;
     }
 }

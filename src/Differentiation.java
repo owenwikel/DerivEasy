@@ -19,11 +19,18 @@ public class Differentiation
      *            - a LinkedChain of Nodes that make up an equation
      * @return - the differentiated LinkedChain
      */
-    public static LinkedChain<Node> differentiate(LinkedChain<Node> equation)
+    public static LinkedChain<Token> differentiate(LinkedChain<Token> equation)
     {
-        String[] eq = equation.toArray();
+        // Added this
+        Token[] tokens = equation.toArray(new Token[equation.size()]);
+        String[] eq = new String[tokens.length];
+        for (int n = 0; n < tokens.length; n++)
+        {
+            eq[n] = tokens[n].getValue();
+        }
+        //
         String[] diffEq = new String[eq.length * 2];
-        LinkedChain<Node> differentiated = new LinkedChain<Node>();
+        LinkedChain<Token> differentiated = new LinkedChain<Token>();
         int i = 0;
         int finalIndex = 0;
         while (i < eq.length)
@@ -63,7 +70,21 @@ public class Differentiation
         {
             if (diffEq[l] != null)
             {
-                differentiated.addToEnd(diffEq[l]);
+                String kind = "";
+                if (diffEq[l].equals("+") || diffEq[l].equals("-")
+                    || diffEq[l].equals("*")||diffEq[l].equals("^"))
+                {
+                    kind = "operator";
+                }
+                else if (Character.isDigit(diffEq[l].charAt(0)))
+                {
+                    kind = "number";
+                }
+                else
+                {
+                    kind = "variable";
+                }
+                differentiated.addToEnd(new Token(kind, diffEq[l]));
             }
         }
         return differentiated;
