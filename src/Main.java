@@ -1,16 +1,23 @@
 import java.util.Scanner;
+/**
+ * Runs DerivEasy, a console derivative calculator.
+ *
+ * @author Owen Wikel
+ * @version 2026.10.15
+ */
 public class Main {
     //~ Fields ................................................................
     private Scanner input;
     private InputReader reader;
-    private Differentiation differentiator;
     private Simplification simplifier;
     //~ Constructors ..........................................................
     /**
-     * Creates a calculator that reads equations from the keyboard.
+     * Starts the program.
+     * 
+     * @param args unused
      */
-    public main(String[] args) {
-        this.run();
+    public static void main(String[] args) {
+        new Main().run();
     }
     
     /**
@@ -19,7 +26,16 @@ public class Main {
      * @param input the scanner to read equations from.
      */
     public Main(Scanner input) {
-        input = new Scanner(System.in);
+        this.input = input;
+        reader = new InputReader();
+        simplifier = new Simplification();
+    }
+    
+    /**
+     * Creates a calculator that reads equations from the keyboard.
+     */
+    public Main() {
+        this(new Scanner(System.in));
     }
     //~Public  Methods ........................................................
     /**
@@ -48,7 +64,7 @@ public class Main {
             }
             equation = reader.readEquation(next);
             try {
-                derivative = differentiator.differentiate(equation);
+                derivative = Differentiation.differentiate(equation);
             }
             catch (ArithmeticException e) {
                 System.out.println("You cannot divide by 0.");

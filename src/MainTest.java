@@ -77,4 +77,14 @@ public class MainTest extends TestCase {
         String printed = runWith("1/0\nquit\n");
         assertTrue(printed.contains("You cannot divide by 0."));
     }
+    
+    /**
+     * Tests that main starts the program and welcomes the user.
+     */
+    public void testMain() {
+        System.setIn(new ByteArrayInputStream("quit\n".getBytes()));
+        Main.main(new String[0]);
+        String printed = out.toString();
+        assertTrue(printed.contains("Welcome"));
+    }
 }
