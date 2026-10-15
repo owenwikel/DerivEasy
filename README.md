@@ -14,6 +14,13 @@ A console-based derivative calculator for Calculus students that simplifies deri
 - Main: the spec listed only `run()`. We added a no-argument constructor, a Scanner constructor so tests can feed fake input, and a `main` method. The class is named Main, not Calculator. (Origin: GenAI suggestion.)
 - Validation: `isValid` only returns a boolean, and `run()` does the re-prompting. `Differentiation` throws ArithmeticException and `run()` catches it. (Origin: group discussion.)
 - Dropped the chain interface and the separate Node class, because staff provided LinkedChain.java. (Origin: group discussion.)
+- InputReader: `isValid` also rejects unsupported characters, unmatched or empty parentheses, a leading or trailing operator, two operators in a row, and a missing `*`. `readEquation` throws IllegalArgumentException on invalid input, and Main does the re-prompting. `hasParentheses` and `findUnmatchedParenthesis` were added and were not in the spec. 
+- Simplification: removes `^1`, `*1`, `1*`, and `+0`/`-0`, and combines like terms of the form `c*x`. `format` was added to this class, as our revised scope said. (Origin: [Ehren fills in])
+- Differentiation: Token kinds were changed to lowercase so they match every other class. (Origin: Owen's own review.)
+
+**What changed in the LinkedChain?**
+
+Used unchanged. The same generic class holds Token (`readEquation`, `Differentiation`, `Simplification`, Main) and Character (`hasParentheses`, a stack of open parentheses called by `isValid`). It also holds Integer in `findUnmatchedParenthesis` (a stack of "(" positions), which is tested but not yet called by Main.
 
  **What happened to our unknowns?**
 
@@ -39,9 +46,6 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 **New tests need:**
 - Methods and logic for the new rules will be needed, as well as test cases for all possible situations
 
-**What changed in the LinkedChain?**
-
-Used unchanged. The same generic class holds Token (`readEquation`, `Differentiation`, `Simplification`, Main) and Character (`hasParentheses`, a stack of open parentheses called by `isValid`). It also holds Integer in `findUnmatchedParenthesis` (a stack of "(" positions), which is tested but not yet called by Main.
 
 **Who does what:**
 - Owen - Main changes, plus tests
