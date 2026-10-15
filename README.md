@@ -40,8 +40,8 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 
  **Stretch goals:**
 - Show which rule was used: committed
-- Differentiating multivariable polynomials: committed / dropped
-- Adding trig, log, and exponential derivatives: committed / dropped
+- Differentiating multivariable polynomials: committed
+- Adding trig, log, and exponential derivatives: committed
 
 **New tests need:**
 - Methods and logic for the new rules will be needed, as well as test cases for all possible situations
