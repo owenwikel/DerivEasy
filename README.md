@@ -44,7 +44,7 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 Used unchanged. The same generic class holds Token (`readEquation`, `Differentiation`, `Simplification`, Main) and Character (`hasParentheses`, a stack of open parentheses called by `isValid`). It also holds Integer in `findUnmatchedParenthesis` (a stack of "(" positions), which is tested but not yet called by Main.
 
 **Who does what:**
-- Owen - Main changes, plus their tests
+- Owen - Main changes, plus tests
 - Ari - 
 - Ehren - 
 - Muna -
