@@ -74,15 +74,15 @@ public class Differentiation
                 if (diffEq[l].equals("+") || diffEq[l].equals("-")
                     || diffEq[l].equals("*")||diffEq[l].equals("^"))
                 {
-                    kind = "operator";
+                    kind = "OPERATOR";
                 }
                 else if (Character.isDigit(diffEq[l].charAt(0)))
                 {
-                    kind = "number";
+                    kind = "NUMBER";
                 }
                 else
                 {
-                    kind = "variable";
+                    kind = "VARIABLE";
                 }
                 differentiated.addToEnd(new Token(kind, diffEq[l]));
             }
