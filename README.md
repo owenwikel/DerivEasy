@@ -39,8 +39,12 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 **New tests need:**
 - Methods and logic for the new rules will be needed, as well as test cases for all possible situations
 
+**What changed in the LinkedChain?**
+
+Used unchanged. The same generic class holds Token (`readEquation`, `Differentiation`, `Simplification`, Main) and Character (`hasParentheses`, a stack of open parentheses called by `isValid`). It also holds Integer in `findUnmatchedParenthesis` (a stack of "(" positions), which is tested but not yet called by Main.
+
 **Who does what:**
-- Owen - 
+- Owen - Main changes, plus their tests
 - Ari - 
 - Ehren - 
 - Muna -
@@ -54,11 +58,13 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 | DifferentiationTest | Ari<br>Owen | wrote, revised, reviewed, tested<br>reviewed, revised, tested |
 | InputReader | Muna | wrote, revised, reviewed, tested |
 | InputReaderTest | Muna | wrote, revised, reviewed, tested |
-| LinkedChain | Owen | reviewed, revised, tested |
+| LinkedChain | Provided by staff | N/A |
 | LinkedChainTest | Owen | wrote, revised, reviewed, tested |
-| Main | Ehren | wrote, revised, reviewed, tested |
-| MainTest | Ehren | wrote, revised, reviewed, tested |
+| Main | Owen | wrote, revised, reviewed, tested |
+| MainTest | Owen | wrote, revised, reviewed, tested |
 | Simplification | Ehren | wrote, revised, reviewed, tested |
 | SimplificationTest | Ehren | wrote, reviseed, reviewed, tested |
 | Token | Owen | wrote, revised, reviewed, tested |
 | TokenTest | Owen | wrote, revised, reviewed, tested |
+
+**GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: [your note]. Ari: [your note]. Ehren: [your note].
