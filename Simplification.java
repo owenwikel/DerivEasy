@@ -6,7 +6,6 @@
  * @author Ehren Casto (ecasto221)
  * @version 2026.09.01
  */
-import java.util.*;
 public class Simplification
 {
     public LinkedChain<Token> simplify(LinkedChain<Token> derivative){
