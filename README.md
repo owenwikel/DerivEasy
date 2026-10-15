@@ -51,7 +51,7 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 - Owen - Main changes, plus tests
 - Ari - 
 - Ehren - 
-- Muna -
+- Muna - Input reader class plus test.
 
 ## Attribution
 
@@ -71,4 +71,4 @@ The MVP features that don't work yet are the quotient, product, and chain rule.
 | Token | Owen | wrote, revised, reviewed, tested |
 | TokenTest | Owen | wrote, revised, reviewed, tested |
 
-**GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: [your note]. Ari: [your note]. Ehren: [your note].
+**GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: Had claude help with junit testing and implementing linkchain / token system. Ari: [your note]. Ehren: [your note].
