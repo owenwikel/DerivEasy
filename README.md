@@ -17,12 +17,48 @@ A console-based derivative calculator for Calculus students that simplifies deri
 
  **What happened to our unknowns?**
 
+We figured out how to separate inputs and group terms together, how to simplify the final answer, and how to divide up the work.
+
  **What doesn't work yet?**
+
+The MVP features that don't work yet are the quotient, product, and chain rule.
 
  ## Next Steps
 
  **Finish the MVP, in order:**
+- Separating terms with parentheses
+- Product rule
+- Quotient rule
+- Chain rule
 
  **Stretch goals:**
-- [Goal from the scope]: committed / dropped
-- [Goal from the scope]: committed / dropped
+- Show which rule was used: committed
+- Differentiating multivariable polynomials: committed / dropped
+- Adding trig, log, and exponential derivatives: committed / dropped
+
+**New tests need:**
+- Methods and logic for the new rules will be needed, as well as test cases for all possible situations
+
+**Who does what:**
+- Owen - 
+- Ari - 
+- Ehren - 
+- Muna -
+
+## Attribution
+
+
+| Class/Test file | Who did it | How they did it |
+| --- | --- | --- |
+| Differentiation | Ari<br>Owen| wrote, revised, reviewed, tested<br>reviewed, revised, tested |
+| DifferentiationTest | Ari<br>Owen | wrote, revised, reviewed, tested<br>reviewed, revised, tested |
+| InputReader | Muna | wrote, revised, reviewed, tested |
+| InputReaderTest | Muna | wrote, revised, reviewed, tested |
+| LinkedChain | Owen | reviewed, revised, tested |
+| LinkedChainTest | Owen | wrote, revised, reviewed, tested |
+| Main | Ehren | wrote, revised, reviewed, tested |
+| MainTest | Ehren | wrote, revised, reviewed, tested |
+| Simplification | Ehren | wrote, revised, reviewed, tested |
+| SimplificationTest | Ehren | wrote, reviseed, reviewed, tested |
+| Token | Owen | wrote, revised, reviewed, tested |
+| TokenTest | Owen | wrote, revised, reviewed, tested |
