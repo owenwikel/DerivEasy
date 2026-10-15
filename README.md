@@ -15,7 +15,7 @@ A console-based derivative calculator for Calculus students that simplifies deri
 - Validation: `isValid` only returns a boolean, and `run()` does the re-prompting. `Differentiation` throws ArithmeticException and `run()` catches it. (Origin: group discussion.)
 - Dropped the chain interface and the separate Node class, because staff provided LinkedChain.java. (Origin: group discussion.)
 - InputReader: `isValid` also rejects unsupported characters, unmatched or empty parentheses, a leading or trailing operator, two operators in a row, and a missing `*`. `readEquation` throws IllegalArgumentException on invalid input, and Main does the re-prompting. `hasParentheses` and `findUnmatchedParenthesis` were added and were not in the spec. 
-- Simplification: removes `^1`, `*1`, `1*`, and `+0`/`-0`, and combines like terms of the form `c*x`. `format` was added to this class, as our revised scope said. (Origin: [Ehren fills in])
+- Simplification: removes `^1`, `*1`, `1*`, and `+0`/`-0`, and combines like terms of the form `c*x`. `format` was added to this class, as our revised scope said. 
 - Differentiation: Token kinds were changed to lowercase so they match every other class. (Origin: Owen's own review.)
 
 **What changed in the LinkedChain?**
