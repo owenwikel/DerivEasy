@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 public class TokenTest extends TestCase {
 
     /**
-     * Constructor stores kind and value.
+     * Checks that constructor stores kind and value.
      */
     public void testConstructorNormal() {
         Token token = new Token("variable", "x");
@@ -18,7 +18,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * Constructor rejects a null kind.
+     * Checks that constructor rejects a null kind.
      */
     public void testConstructorNullKind() {
         Exception exception = null;
@@ -32,7 +32,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * Constructor rejects a null value.
+     * Makes sure that constructor rejects a null value.
      */
     public void testConstructorNullValue() {
         Exception exception = null;
@@ -46,7 +46,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * getKind returns the kind.
+     * Checks that getKind returns the kind.
      */
     public void testGetKind() {
         Token token = new Token("variable", "x");
@@ -55,7 +55,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * getValue returns the value.
+     * tests that getValue returns the value.
      */
     public void testGetValue() {
         Token token = new Token("variable", "x");
@@ -64,7 +64,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * equals is true for same kind and value.
+     * Checks equals is true for same kind and value.
      */
     public void testEqualsSame() {
         Token first = new Token("variable", "x");
@@ -74,7 +74,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * equals is false for a different value.
+     * Makes sure equals is false for a different value.
      */
     public void testEqualsDifferentValue() {
         Token first = new Token("variable", "x");
@@ -84,7 +84,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * equals is false for a different kind.
+     * Checks equals is false for a different kind.
      */
     public void testEqualsDifferentKind() {
         Token first = new Token("variable", "x");
@@ -94,7 +94,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * equals is false for null.
+     * Checks equals is false for null.
      */
     public void testEqualsNull() {
         Token token = new Token("variable", "x");
@@ -102,7 +102,7 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * equals is false for a different type.
+     * Tests that equals is false for a different type.
      */
     public void testEqualsOtherType() {
         Token token = new Token("variable", "x");
@@ -111,11 +111,61 @@ public class TokenTest extends TestCase {
     }
 
     /**
-     * toString returns the value.
+     * Tests that toString returns the value.
      */
     public void testToString() {
         Token token = new Token("variable", "x");
         String text = token.toString();
         assertEquals("x", text);
+    }
+    
+    /**
+     * Tests that setKind changes the kind.
+     */
+    public void testSetKind() {
+        Token token = new Token("variable", "x");
+        token.setKind("number");
+        String kind = token.getKind();
+        assertEquals("number", kind);
+    }
+
+    /**
+     * Assures setKind rejects null.
+     */
+    public void testSetKindNull() {
+        Token token = new Token("variable", "x");
+        Exception exception = null;
+        try {
+            token.setKind(null);
+        }
+        catch (IllegalArgumentException e) {
+            exception = e;
+        }
+        assertNotNull(exception);
+    }
+
+    /**
+     * Checks setValue changes the value.
+     */
+    public void testSetValue() {
+        Token token = new Token("variable", "x");
+        token.setValue("y");
+        String value = token.getValue();
+        assertEquals("y", value);
+    }
+
+    /**
+     * Makes sure setValue rejects null.
+     */
+    public void testSetValueNull() {
+        Token token = new Token("variable", "x");
+        Exception exception = null;
+        try {
+            token.setValue(null);
+        }
+        catch (IllegalArgumentException e) {
+            exception = e;
+        }
+        assertNotNull(exception);
     }
 }

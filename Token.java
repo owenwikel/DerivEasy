@@ -4,12 +4,18 @@
  * @author Owen Wikel
  * @version 2026.10.13
  */
-
 public class Token {
     //~ Fields ................................................................
     private String kind;
     private String value;
     //~ Constructors ..........................................................
+    /**
+     * Creates a Token with the given kind and value.
+     *
+     * @param kind the kind of piece
+     * @param value the piece itself
+     * @throws IllegalArgumentException if kind or value is null
+     */
     public Token(String kind, String value) throws IllegalArgumentException {
         if (kind == null || value == null) {
             throw new IllegalArgumentException();
@@ -27,11 +33,35 @@ public class Token {
     }
     
     /**
+    Sets the kind of value. O(1)
+    * @param the new kind of value.
+    * @throws IllegalArgumentException if kind is null
+    */
+    public void setKind(String kind) throws IllegalArgumentException {
+        if (kind == null) {
+            throw new IllegalArgumentException();
+        }
+        this.kind = kind;
+    }
+    
+    /**
      * returns value. O(1)
      * @return the value
      */
     public String getValue() {
         return value;
+    }
+    
+    /**
+     Sets the value. O(1)
+     * @param the new value.
+     * @throws IllegalArgumentException if value is null
+     */
+    public void setValue(String value) throws IllegalArgumentException {
+        if (value == null) {
+            throw new IllegalArgumentException();
+        }
+        this.value = value;
     }
     
     /**
