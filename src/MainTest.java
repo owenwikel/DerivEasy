@@ -87,4 +87,21 @@ public class MainTest extends TestCase {
         String printed = out.toString();
         assertTrue(printed.contains("Welcome"));
     }
+    
+    /**
+     * Tests that input Differentiation cannot handle prints the
+     * unsupported message and asks again.
+     */
+    public void testRunUnsupportedInput() {
+        String printed = runWith("(x+1)^2\nquit\n");
+        assertTrue(printed.contains("This equation is not supported yet."));
+    }
+
+    /**
+     * Tests that an unmatched parenthesis is reported with its position.
+     */
+    public void testRunUnmatchedParenthesis() {
+        String printed = runWith("(x+1\nquit\n");
+        assertTrue(printed.contains("Unmatched parenthesis at position 1."));
+    }
 }

@@ -59,19 +59,28 @@ public class Main {
                 break;
             }
             if (!reader.isValid(next)) {
-                System.out.println("This is not valid input.");
+                int position = reader.findUnmatchedParenthesis(next);
+                if (position == -1) {
+                    System.out.println("This is not valid input.");
+                }
+                else {
+                    System.out.println("Unmatched parenthesis at position "
+                        + (position + 1) + ".");
+                }
                 continue;
             }
             equation = reader.readEquation(next);
             try {
                 derivative = Differentiation.differentiate(equation);
+                simplified = simplifier.simplify(derivative);
+                System.out.println(simplifier.format(simplified));
             }
             catch (ArithmeticException e) {
                 System.out.println("You cannot divide by 0.");
-                continue;
             }
-            simplified = simplifier.simplify(derivative);
-            System.out.println(simplifier.format(simplified));
+            catch (RuntimeException e) {
+                System.out.println("This equation is not supported yet.");
+            }
         }
     }
 }
