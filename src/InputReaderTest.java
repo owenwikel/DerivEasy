@@ -1,16 +1,15 @@
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import junit.framework.TestCase;
 
 /**
- * Tests for InputReader. Covers hasParentheses, isValid, and readEquation, with
- * at least one normal case and one bad-input case for each.
+ * Tests for InputReader. Covers hasParentheses, isValid, readEquation and
+ * findUnmatchedParenthesis, with at least one normal case and one bad-input
+ * case for each.
  *
  * @author Muna Ali
- * @version Oct 14, 2026
+ * @version Oct 15, 2026
  */
 public class InputReaderTest
+    extends TestCase
 {
     // ~ Fields ................................................................
 
@@ -23,20 +22,16 @@ public class InputReaderTest
     /**
      * Creates a fresh InputReader before each test.
      */
-    @BeforeEach
     public void setUp()
     {
         reader = new InputReader();
     }
 
-    // ---- hasParentheses ----
-
 
     /**
      * Normal case: matching nested parentheses are accepted.
      */
-    @Test
-    public void hasNormalParentheses()
+    public void testHasNormalParentheses()
     {
         assertTrue(reader.hasParentheses("((x+7)*2)"));
     }
@@ -45,8 +40,7 @@ public class InputReaderTest
     /**
      * Normal case: an equation with no parentheses at all is accepted.
      */
-    @Test
-    public void hasNoParentheses()
+    public void testHasNoParentheses()
     {
         assertTrue(reader.hasParentheses("3*x+7"));
     }
@@ -56,8 +50,7 @@ public class InputReaderTest
      * Bad input: a ")" with nothing open is rejected, which means removing from
      * an empty chain.
      */
-    @Test
-    public void incorrectParentheses()
+    public void testIncorrectParentheses()
     {
         assertFalse(reader.hasParentheses(")"));
         assertFalse(reader.hasParentheses("x+9)("));
@@ -68,8 +61,7 @@ public class InputReaderTest
      * Bad input: a "(" that is never closed is rejected (leftover in the
      * chain).
      */
-    @Test
-    public void openParentheses()
+    public void testOpenParentheses()
     {
         assertFalse(reader.hasParentheses("(x+9"));
     }
@@ -78,20 +70,16 @@ public class InputReaderTest
     /**
      * Bad input: null input is rejected without crashing.
      */
-    @Test
-    public void hasNullParentheses()
+    public void testHasNullParentheses()
     {
         assertFalse(reader.hasParentheses(null));
     }
-
-    // ---- isValid ----
 
 
     /**
      * Normal case: well-formed equations are accepted.
      */
-    @Test
-    public void isValidTest()
+    public void testIsValid()
     {
         assertTrue(reader.isValid("(x+1)"));
         assertTrue(reader.isValid("3*x^2+(x+4)*6"));
@@ -101,8 +89,7 @@ public class InputReaderTest
     /**
      * Bad input: an empty string is rejected.
      */
-    @Test
-    public void isValidEmpty()
+    public void testIsValidEmpty()
     {
         assertFalse(reader.isValid(""));
     }
@@ -111,8 +98,7 @@ public class InputReaderTest
     /**
      * Bad input: null input is rejected without crashing.
      */
-    @Test
-    public void isValidNull()
+    public void testIsValidNull()
     {
         assertFalse(reader.isValid(null));
     }
@@ -121,8 +107,7 @@ public class InputReaderTest
     /**
      * Bad input: spaces in the equation are rejected.
      */
-    @Test
-    public void isValidSpaces()
+    public void testIsValidSpaces()
     {
         assertFalse(reader.isValid("9 * x"));
     }
@@ -131,8 +116,7 @@ public class InputReaderTest
     /**
      * Bad input: spelled-out numbers (words) are rejected.
      */
-    @Test
-    public void isValidSpelling()
+    public void testIsValidSpelling()
     {
         assertFalse(reader.isValid("two * x"));
     }
@@ -142,8 +126,7 @@ public class InputReaderTest
      * Bad input: a missing "*" between a number and a variable or parenthesis
      * is rejected.
      */
-    @Test
-    public void isValidNoMultiplying()
+    public void testIsValidNoMultiplying()
     {
         assertFalse(reader.isValid("8x"));
         assertFalse(reader.isValid("4(x+1)"));
@@ -154,8 +137,7 @@ public class InputReaderTest
      * Bad input: an equation that ends with an operator is incomplete and is
      * rejected.
      */
-    @Test
-    public void isValidNotComplete()
+    public void testIsValidNotComplete()
     {
         assertFalse(reader.isValid("9+x*"));
     }
@@ -164,8 +146,7 @@ public class InputReaderTest
     /**
      * Bad input: unmatched or empty parentheses are rejected.
      */
-    @Test
-    public void isValid_unbalancedParens()
+    public void testIsValidUnbalancedParens()
     {
         assertFalse(reader.isValid("(x+1"));
         assertFalse(reader.isValid("x+1)"));
@@ -176,8 +157,7 @@ public class InputReaderTest
     /**
      * Bad input: an equation that starts with an operator is rejected.
      */
-    @Test
-    public void isValidStartsWithOperator()
+    public void testIsValidStartsWithOperator()
     {
         assertFalse(reader.isValid("*3"));
     }
@@ -186,8 +166,7 @@ public class InputReaderTest
     /**
      * Bad input: two operators in a row are rejected.
      */
-    @Test
-    public void isValidDoubleOperator()
+    public void testIsValidDoubleOperator()
     {
         assertFalse(reader.isValid("2++3"));
     }
@@ -196,20 +175,16 @@ public class InputReaderTest
     /**
      * Bad input: an operator right before ")" is rejected.
      */
-    @Test
-    public void isValidOperatorBeforeCloseParen()
+    public void testIsValidOperatorBeforeCloseParen()
     {
         assertFalse(reader.isValid("(2+)"));
     }
-
-    // ---- readEquation ----
 
 
     /**
      * Normal case: the chain keeps the order the user typed.
      */
-    @Test
-    public void readEquation_normalKeepsTypedOrder()
+    public void testReadEquationKeepsTypedOrder()
     {
         LinkedChain<Token> chain = reader.readEquation("3*x+1");
         Token[] pieces = chain.toArray(new Token[chain.size()]);
@@ -226,8 +201,7 @@ public class InputReaderTest
      * Normal case: multi-digit numbers become one token, and each token has the
      * right kind.
      */
-    @Test
-    public void readEquation_multiDigitNumberAndKinds()
+    public void testReadEquationMultiDigitNumberAndKinds()
     {
         LinkedChain<Token> chain = reader.readEquation("12*x");
         Token[] pieces = chain.toArray(new Token[chain.size()]);
@@ -242,8 +216,7 @@ public class InputReaderTest
     /**
      * Normal case: parentheses become tokens of kind "parenthesis".
      */
-    @Test
-    public void readEquation_parenthesesTokens()
+    public void testReadEquationParenthesesTokens()
     {
         LinkedChain<Token> chain = reader.readEquation("(x+1)");
         Token[] pieces = chain.toArray(new Token[chain.size()]);
@@ -257,35 +230,42 @@ public class InputReaderTest
     /**
      * Bad input: empty input throws IllegalArgumentException.
      */
-    @Test
-    public void readEquation_emptyInputThrows()
+    public void testReadEquationEmptyInputThrows()
     {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> reader.readEquation(""));
+        try
+        {
+            reader.readEquation("");
+            fail("Expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
     }
 
 
     /**
      * Bad input: unbalanced input throws IllegalArgumentException.
      */
-    @Test
-    public void readEquation_unbalancedInputThrows()
+    public void testReadEquationUnbalancedInputThrows()
     {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> reader.readEquation("(x+1"));
+        try
+        {
+            reader.readEquation("(x+1");
+            fail("Expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // expected
+        }
     }
-
-    // ---- findUnmatchedParenthesis and empty-chain cases ----
 
 
     /**
      * Empty collection: an empty string leaves the chain empty, so it is
      * accepted by hasParentheses.
      */
-    @Test
-    public void hasParentheses_emptyString()
+    public void testHasParenthesesEmptyString()
     {
         assertTrue(reader.hasParentheses(""));
     }
@@ -295,8 +275,7 @@ public class InputReaderTest
      * Removing something that is not there: each ")" tries to remove from an
      * empty chain, so the input is rejected.
      */
-    @Test
-    public void hasParentheses_removeFromEmptyChain()
+    public void testHasParenthesesRemoveFromEmptyChain()
     {
         assertFalse(reader.hasParentheses("))"));
     }
@@ -305,8 +284,7 @@ public class InputReaderTest
     /**
      * Normal case: all parentheses match, so -1 is returned.
      */
-    @Test
-    public void findUnmatched_allMatched()
+    public void testFindUnmatchedAllMatched()
     {
         assertEquals(-1, reader.findUnmatchedParenthesis("((x+1)*2)"));
     }
@@ -315,8 +293,7 @@ public class InputReaderTest
     /**
      * Empty collection: an empty string has nothing unmatched.
      */
-    @Test
-    public void findUnmatched_emptyString()
+    public void testFindUnmatchedEmptyString()
     {
         assertEquals(-1, reader.findUnmatchedParenthesis(""));
     }
@@ -325,8 +302,7 @@ public class InputReaderTest
     /**
      * Bad input: an extra ")" is reported at its position.
      */
-    @Test
-    public void findUnmatched_extraClose()
+    public void testFindUnmatchedExtraClose()
     {
         assertEquals(3, reader.findUnmatchedParenthesis("x+1)"));
     }
@@ -335,8 +311,7 @@ public class InputReaderTest
     /**
      * Bad input: a "(" that is never closed is reported at its position.
      */
-    @Test
-    public void findUnmatched_leftoverOpen()
+    public void testFindUnmatchedLeftoverOpen()
     {
         assertEquals(2, reader.findUnmatchedParenthesis("3*(x+1"));
     }
@@ -345,11 +320,17 @@ public class InputReaderTest
     /**
      * Bad input: null throws IllegalArgumentException.
      */
-    @Test
-    public void findUnmatched_nullThrows()
+    public void testFindUnmatchedNullThrows()
     {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> reader.findUnmatchedParenthesis(null));
+        try
+        {
+            reader.findUnmatchedParenthesis(null);
+            fail("Expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+
+            // expected
+        }
     }
 }
