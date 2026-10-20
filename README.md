@@ -9,8 +9,7 @@ A console-based derivative calculator for Calculus students that simplifies deri
 
 ## System Diagram
 
-![System diagram](<img width="434" height="266" alt="Screenshot 2026-10-19 204431" src="https://github.com/user-attachments/assets/72f3d4b5-8a11-4526-bd3e-e52cb98c92b4" />
-)
+<img width="434" height="266" alt="System diagram" src="https://github.com/user-attachments/assets/72f3d4b5-8a11-4526-bd3e-e52cb98c92b4" />
 
 The LinkedChain is one generic class used for three element types: Token (the equation, used by InputReader, Differentiation, Simplification and Main), Character (a stack of open parentheses in `hasParentheses`), and Integer (a stack of "(" positions in `findUnmatchedParenthesis`).
 
