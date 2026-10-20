@@ -7,6 +7,13 @@ A console-based derivative calculator for Calculus students that simplifies deri
 3. Run the program: right-click `Main.java`, Run As, Java Application.
 4. Run the tests: right-click a test file (or the project), Run As, JUnit Test.
 
+## System Diagram
+
+![System diagram](<img width="434" height="266" alt="Screenshot 2026-10-19 204431" src="https://github.com/user-attachments/assets/72f3d4b5-8a11-4526-bd3e-e52cb98c92b4" />
+)
+
+The LinkedChain is one generic class used for three element types: Token (the equation, used by InputReader, Differentiation, Simplification and Main), Character (a stack of open parentheses in `hasParentheses`), and Integer (a stack of "(" positions in `findUnmatchedParenthesis`).
+
 ## Reflection
 
 **What changed from our specification?**
@@ -76,6 +83,3 @@ Bad input: The bad-input cases from our scope (unsupported characters, unmatched
 | TokenTest | Owen | wrote, revised, reviewed, tested |
 
 **GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: Had claude help with junit testing and implementing linkchain / token system. Ari: Had Gemini brainstorm ideas on how to separate the terms and debug. Ehren: Had Claude help with logic structure and how best to test.
-
-## System Diagram
-
