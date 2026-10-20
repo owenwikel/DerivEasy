@@ -17,6 +17,7 @@ A console-based derivative calculator for Calculus students that simplifies deri
 - InputReader: `isValid` also rejects unsupported characters, unmatched or empty parentheses, a leading or trailing operator, two operators in a row, and a missing `*`. `readEquation` throws IllegalArgumentException on invalid input, and Main does the re-prompting. `hasParentheses` and `findUnmatchedParenthesis` were added and were not in the spec. 
 - Simplification: removes `^1`, `*1`, `1*`, and `+0`/`-0`, and combines like terms of the form `c*x`. `format` was added to this class, as our revised scope said. 
 - Differentiation: Token kinds were changed to lowercase so they match every other class. (Origin: Owen's own review.)
+-  Main: `run()` prints "This equation is not supported yet." and re-prompts when Differentiation, Simplification, or format cannot handle valid input, and uses `findUnmatchedParenthesis` to report which parenthesis has no match. 
 
 **What changed in the LinkedChain?**
 
@@ -75,3 +76,6 @@ Bad input: The bad-input cases from our scope (unsupported characters, unmatched
 | TokenTest | Owen | wrote, revised, reviewed, tested |
 
 **GenAI note:** Owen used Claude as a tutor for the Token class idea, `equals`/`toString`,  Main's constructors, the ByteArray technique for testing `run()`, and to review his test classes. Muna: Had claude help with junit testing and implementing linkchain / token system. Ari: Had Gemini brainstorm ideas on how to separate the terms and debug. Ehren: Had Claude help with logic structure and how best to test.
+
+## System Diagram
+
