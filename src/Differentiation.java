@@ -62,10 +62,10 @@ public class Differentiation
             }
 
             String[] term = Arrays.copyOfRange(eq, start, end);
-            String[] result = differentiateTerm(term, targetVar); // Pass target
+            String[] result = removeParens(differentiateTerm(term, targetVar)); // Pass target
                                                                   // variable
                                                                   // down
-
+            
             for (String token : result)
             {
                 if (token != null)
@@ -82,7 +82,7 @@ public class Differentiation
                 i = end;
             }
         }
-
+        
         // reconstruct into LinkedChain
         LinkedChain<Token> differentiated = new LinkedChain<Token>();
         for (String val : diffEqList)
@@ -284,22 +284,38 @@ public class Differentiation
             String[] fPrime = differentiateTerm(f, targetVar);
             String[] gPrime = differentiateTerm(g, targetVar);
 
+            boolean fZero = fPrime.length == 1 && fPrime[0].equals("0");
+            boolean gZero = gPrime.length == 1 && gPrime[0].equals("0");
+
             List<String> result = new ArrayList<>();
-            result.add("(");
-            result.addAll(Arrays.asList(fPrime));
-            result.add(")");
-            result.add("*");
-            result.add("(");
-            result.addAll(Arrays.asList(g));
-            result.add(")");
-            result.add("+");
-            result.add("(");
-            result.addAll(Arrays.asList(f));
-            result.add(")");
-            result.add("*");
-            result.add("(");
-            result.addAll(Arrays.asList(gPrime));
-            result.add(")");
+            if (!fZero)
+            {
+                result.add("(");
+                result.addAll(Arrays.asList(fPrime));
+                result.add(")");
+                result.add("*");
+                result.add("(");
+                result.addAll(Arrays.asList(g));
+                result.add(")");
+            }
+            if (!gZero)
+            {
+                if (!fZero)
+                {
+                    result.add("+");
+                }
+                result.add("(");
+                result.addAll(Arrays.asList(f));
+                result.add(")");
+                result.add("*");
+                result.add("(");
+                result.addAll(Arrays.asList(gPrime));
+                result.add(")");
+            }
+            if (result.isEmpty())
+            {
+                return new String[] { "0" };
+            }
             return result.toArray(new String[0]);
         }
 
@@ -404,5 +420,127 @@ public class Differentiation
             return new String[] { "0" };
         }
         return term;
+    }
+    
+    private static boolean isOp(String s)
+    {
+        return s.equals("+") || s.equals("-") || s.equals("*")
+            || s.equals("/") || s.equals("^");
+    }
+
+    // ----------------------------------------------------------
+    /**
+     * Place a description of your method here.
+     * @param term
+     * @return - blah
+     */
+    public static String[] removeParens(String[] term)
+    {
+        List<String> t = new ArrayList<>(Arrays.asList(term));
+
+        boolean changed = true;
+        while (changed)
+        {
+            changed = false;
+
+            for (int open = 0; open < t.size(); open++)
+            {
+                if (!t.get(open).equals("("))
+                    continue;
+
+                // find the matching )
+                int depth = 0;
+                int close = -1;
+                for (int k = open; k < t.size(); k++)
+                {
+                    if (t.get(k).equals("("))
+                        depth++;
+                    else if (t.get(k).equals(")"))
+                        depth--;
+                    if (depth == 0)
+                    {
+                        close = k;
+                        break;
+                    }
+                }
+
+                // skip empty or broken parentheses
+                if (close == -1 || close == open + 1)
+                    continue;
+
+                String before = "";
+                if (open > 0)
+                    before = t.get(open - 1);
+
+                String after = "";
+                if (close < t.size() - 1)
+                    after = t.get(close + 1);
+
+                // look inside the parentheses (ignoring anything nested deeper)
+                boolean hasPlusMinus = false;
+                boolean hasDivide = false;
+                depth = 0;
+                for (int k = open + 1; k < close; k++)
+                {
+                    String tok = t.get(k);
+                    if (tok.equals("("))
+                        depth++;
+                    else if (tok.equals(")"))
+                        depth--;
+                    else if (depth == 0)
+                    {
+                        if (tok.equals("+") || tok.equals("-"))
+                            hasPlusMinus = true;
+                        if (tok.equals("/"))
+                            hasDivide = true;
+                    }
+                }
+
+                boolean singleToken = (close - open - 1 == 1);
+                boolean negativeSingle = singleToken
+                    && t.get(open + 1).startsWith("-");
+
+                // something like sin( ... ) needs its parentheses
+                boolean afterFunction = !before.equals("")
+                    && !before.equals("(") && !isOp(before);
+
+                boolean remove = false;
+
+                if (afterFunction)
+                {
+                    remove = false;
+                }
+                else if (singleToken && !negativeSingle)
+                {
+                    // (x) or (3) never need parentheses
+                    remove = true;
+                }
+                else if (!negativeSingle
+                    && (before.equals("") || before.equals("(") || before.equals("+"))
+                    && (after.equals("") || after.equals(")")
+                        || after.equals("+") || after.equals("-")))
+                {
+                    // nothing around it can change the meaning
+                    remove = true;
+                }
+                else if (!negativeSingle && !hasPlusMinus && !hasDivide
+                    && !before.equals("/") && !before.equals("^")
+                    && !after.equals("^"))
+                {
+                    // only * and ^ inside, so it's safe, e.g. 2*(x^2) -> 2*x^2
+                    remove = true;
+                }
+
+                if (remove)
+                {
+                    t.remove(close);   // remove the later one first
+                    t.remove(open);
+                    changed = true;
+                    break;             // start over since positions moved
+                }
+            }
+        }
+
+        return t.toArray(new String[0]);
     }
 }
