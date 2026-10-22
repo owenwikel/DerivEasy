@@ -8,6 +8,8 @@ public class InputReader
 {
     // ~ Fields ................................................................
 
+    private static final String[] FUNCTIONS =
+        { "sin", "cos", "tan", "sec", "csc", "cot", "ln", "log" };
     // ~ Constructors ..........................................................
 
     // ~Public Methods ........................................................
@@ -22,6 +24,45 @@ public class InputReader
     private boolean isOperator(char c)
     {
         return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+    }
+
+
+    /**
+     * Checks if the character is 0-9
+     * 
+     * @param c
+     *            the character to check
+     * @return true if c is a digit, false otherwise
+     */
+    private boolean isDigit(char c)
+    {
+        return c >= '0' && c <= '9';
+    }
+
+
+    /**
+     * Checks whether a supported function name (sin, cos, tan, sec, csc, cot,
+     * ln, log) ends at the given index. Used by readEquation, which reads the
+     * input from back to front.
+     *
+     * @param input
+     *            the equation the user typed
+     * @param end
+     *            the index of the last character to check
+     * @return the length of the function name ending at end, or 0 if none does
+     */
+
+    private int functionEndingWith(String input, int end)
+    {
+        for (String name : FUNCTIONS)
+        {
+            int start = end - name.length() + 1;
+            if (start >= 0 && input.startsWith(name, start))
+            {
+                return name.length();
+            }
+        }
+        return 0;
     }
 
 
@@ -64,8 +105,7 @@ public class InputReader
 
 
     /**
-     * Checks if input is a valid equation: only digits, x, operators, and
-     * parentheses, no missing "*", no dangling operators, matching parentheses.
+     * Checks if input is a valid equation
      * 
      * @param input
      *            the equation the user typed
@@ -81,7 +121,8 @@ public class InputReader
         for (int i = 0; i < input.length(); i++)
         {
             char character = input.charAt(i);
-            boolean vaild = Character.isDigit(character) || character == 'x'
+            boolean vaild = Character.isDigit(character)
+                || (character >= 'a' && character <= 'z') || character == '.'
                 || isOperator(character) || character == '('
                 || character == ')';
             if (!vaild)
@@ -95,22 +136,36 @@ public class InputReader
             return false;
         }
 
-        char firstchar = input.charAt(0);
-        char lastchar = input.charAt(input.length() - 1);
-        if (isOperator(firstchar) || firstchar == ')')
+        if (("#" + input + "#")
+            .matches(".*([^0-9]\\.|\\.[^0-9]|\\.[0-9]*\\.).*"))
         {
             return false;
         }
-        if (isOperator(lastchar) || lastchar == '(')
-        {
-            return false;
-        }
-        for (int i = 0; i < input.length() - 1; i++)
-        {
-            char a = input.charAt(i);
-            char b = input.charAt(i + 1);
 
-            if (isOperator(a) && isOperator(b))
+        String s = input;
+        for (String name : FUNCTIONS)
+        {
+            s = s.replace(name, "F");
+        }
+
+        char firstchar = s.charAt(0);
+        char lastchar = s.charAt(s.length() - 1);
+        if ((isOperator(firstchar) && firstchar != '-') || firstchar == ')')
+        {
+            return false;
+        }
+        if (isOperator(lastchar) || lastchar == '(' || lastchar == 'F')
+        {
+            return false;
+        }
+        for (int i = 0; i < s.length() - 1; i++)
+        {
+            char a = s.charAt(i);
+            char b = s.charAt(i + 1);
+
+            // "-" is allowed right after * / ^ (x^-1, 2*-x)
+            if (isOperator(a) && isOperator(b)
+                && !(b == '-' && a != '+' && a != '-'))
             {
                 return false; // e.g. "2+*3"
             }
@@ -118,14 +173,19 @@ public class InputReader
             {
                 return false; // e.g. "(2+)"
             }
-            if (a == '(' && (isOperator(b) || b == ')'))
+            if (a == '(' && ((isOperator(b) && b != '-') || b == ')'))
             {
                 return false; // e.g. "(+2)" or "()"
             }
-            // missing "*": 2x, x2, 3(x), (x)(x), x(x), (x)2, xx
-            boolean endsOperand = Character.isDigit(a) || a == 'x' || a == ')';
-            boolean startsOperand =
-                Character.isDigit(b) || b == 'x' || b == '(';
+            if (a == 'F' && b != '(')
+            {
+                return false; // a function must be followed by "("
+            }
+            // missing "*": 2x, x2, 3(x), (x)(x), x(x), (x)2, xx, 2sin(x)
+            boolean endsOperand =
+                Character.isDigit(a) || (a >= 'a' && a <= 'z') || a == ')';
+            boolean startsOperand = Character.isDigit(b)
+                || (b >= 'a' && b <= 'z') || b == '(' || b == 'F';
             boolean sameNumber = Character.isDigit(a) && Character.isDigit(b);
             if (endsOperand && startsOperand && !sameNumber)
             {
@@ -160,17 +220,35 @@ public class InputReader
             if (Character.isDigit(character))
             {
                 int start = i;
-                while (start > 0 && Character.isDigit(input.charAt(start - 1)))
+                while (start > 0 && (Character.isDigit(input.charAt(start - 1))
+                    || input.charAt(start - 1) == '.'))
                 {
                     start--;
                 }
                 chain.add(new Token("number", input.substring(start, i + 1)));
                 i = start - 1;
             }
-            else if (character == 'x')
+            else if (character >= 'a' && character <= 'z')
             {
-                chain.add(new Token("variable", "x"));
-                i--;
+                int length = functionEndingWith(input, i);
+                if (length > 0)
+                {
+                    chain.add(
+                        new Token(
+                            "function",
+                            input.substring(i - length + 1, i + 1)));
+                    i -= length;
+                }
+                else if (character == 'e')
+                {
+                    chain.add(new Token("constant", "e"));
+                    i--;
+                }
+                else
+                {
+                    chain.add(new Token("variable", String.valueOf(character)));
+                    i--;
+                }
             }
             else if (character == '(' || character == ')')
             {

@@ -256,7 +256,7 @@ public class InputReaderTest
         }
         catch (IllegalArgumentException e)
         {
-            // expected
+
         }
     }
 
@@ -329,7 +329,202 @@ public class InputReaderTest
         }
         catch (IllegalArgumentException e)
         {
+            // expected
+        }
+    }
 
+
+    /**
+     * Normal case: nested parentheses and powers of groups are accepted.
+     */
+    public void testNestedAndGroupedPowers()
+    {
+        assertTrue(reader.isValid("(x^2+1)^3"));
+        assertTrue(reader.isValid("((2*x)+1)*x"));
+        assertTrue(reader.isValid("(x+1)*(x-1)"));
+        assertTrue(reader.isValid("(x^2)/(x+1)"));
+        assertTrue(reader.isValid("x^(1/2)"));
+    }
+
+
+    /**
+     * Normal case: a leading minus is accepted where a student would type it.
+     */
+    public void testUnaryMinusAccepted()
+    {
+        assertTrue(reader.isValid("-x^2"));
+        assertTrue(reader.isValid("(-x)^2"));
+        assertTrue(reader.isValid("x^-1"));
+        assertTrue(reader.isValid("2*-x"));
+        assertTrue(reader.isValid("3/-x"));
+    }
+
+
+    /**
+     * Bad input: only a single "-" may act as a sign.
+     */
+    public void testUnaryMinusRejected()
+    {
+        assertFalse(reader.isValid("+x"));
+        assertFalse(reader.isValid("(+x)"));
+        assertFalse(reader.isValid("2--x"));
+        assertFalse(reader.isValid("2+-x"));
+        assertFalse(reader.isValid("-"));
+        assertFalse(reader.isValid("x^-"));
+    }
+
+
+    /**
+     * Normal case: decimals and multi-digit numbers are accepted.
+     */
+    public void testDecimals()
+    {
+        assertTrue(reader.isValid("0.5*x"));
+        assertTrue(reader.isValid("12*x^10"));
+        assertTrue(reader.isValid("x^2.5"));
+    }
+
+
+    /**
+     * Bad input: malformed decimals are rejected.
+     */
+    public void testBadDecimals()
+    {
+        assertFalse(reader.isValid("1.*x"));
+        assertFalse(reader.isValid(".5*x"));
+        assertFalse(reader.isValid("1.2.3*x"));
+        assertFalse(reader.isValid("x*1."));
+    }
+
+
+    /**
+     * Normal case: other single-letter variables and the constant e.
+     */
+    public void testOtherVariables()
+    {
+        assertTrue(reader.isValid("x*y"));
+        assertTrue(reader.isValid("x^2*y^3"));
+        assertTrue(reader.isValid("e^x"));
+        assertTrue(reader.isValid("3*t+2*u"));
+    }
+
+
+    /**
+     * Bad input: letters side by side, or capitals, are rejected.
+     */
+    public void testBadLetters()
+    {
+        assertFalse(reader.isValid("xy"));
+        assertFalse(reader.isValid("two*x"));
+        assertFalse(reader.isValid("X+1"));
+        assertFalse(reader.isValid("2e"));
+    }
+
+
+    /**
+     * Normal case: functions followed by parentheses are accepted.
+     */
+    public void testFunctionsAccepted()
+    {
+        assertTrue(reader.isValid("sin(x)"));
+        assertTrue(reader.isValid("sin(x^2)"));
+        assertTrue(reader.isValid("2*cos(x)+ln(x)"));
+        assertTrue(reader.isValid("sin(cos(x))"));
+        assertTrue(reader.isValid("-sin(x)"));
+        assertTrue(reader.isValid("x*log(x)"));
+    }
+
+
+    /**
+     * Bad input: functions with no parentheses, empty parentheses, or no "*"
+     * next to them are rejected.
+     */
+    public void testFunctionsRejected()
+    {
+        assertFalse(reader.isValid("sin"));
+        assertFalse(reader.isValid("sin x"));
+        assertFalse(reader.isValid("sinx"));
+        assertFalse(reader.isValid("sin()"));
+        assertFalse(reader.isValid("sin+x"));
+        assertFalse(reader.isValid("x sin(x)"));
+        assertFalse(reader.isValid("xsin(x)"));
+        assertFalse(reader.isValid("2sin(x)"));
+        assertFalse(reader.isValid("sin(x)cos(x)"));
+        assertFalse(reader.isValid("sin(x)*"));
+    }
+
+
+    /**
+     * Bad input: the original rules still hold after the changes.
+     */
+    public void testOldRulesStillHold()
+    {
+        assertFalse(reader.isValid("2x"));
+        assertFalse(reader.isValid("2(x+1)"));
+        assertFalse(reader.isValid("(x)(x)"));
+        assertFalse(reader.isValid("()"));
+        assertFalse(reader.isValid("(x+1"));
+        assertFalse(reader.isValid("x+1)"));
+        assertFalse(reader.isValid("x++2"));
+        assertFalse(reader.isValid("*x"));
+        assertFalse(reader.isValid("x+"));
+        assertFalse(reader.isValid("^2"));
+        assertFalse(reader.isValid("x^"));
+        assertFalse(reader.isValid("3 * x ^ 2"));
+        assertFalse(reader.isValid("x@2"));
+    }
+
+
+    /**
+     * Tokens: a function gets its own token kind and the order is kept.
+     */
+    public void testReadEquationFunction()
+    {
+        LinkedChain<Token> chain = reader.readEquation("2*sin(x)");
+        Token[] pieces = chain.toArray(new Token[chain.size()]);
+        assertEquals(6, pieces.length);
+        assertEquals("number", pieces[0].getKind());
+        assertEquals("operator", pieces[1].getKind());
+        assertEquals("function", pieces[2].getKind());
+        assertEquals("sin", pieces[2].getValue());
+        assertEquals("(", pieces[3].getValue());
+        assertEquals("variable", pieces[4].getKind());
+        assertEquals(")", pieces[5].getValue());
+    }
+
+
+    /**
+     * Tokens: a decimal stays one token, a leading minus is an operator token,
+     * and e is a constant.
+     */
+    public void testReadEquationDecimalMinusConstant()
+    {
+        LinkedChain<Token> chain = reader.readEquation("-0.5*e^y");
+        Token[] pieces = chain.toArray(new Token[chain.size()]);
+        assertEquals(6, pieces.length);
+        assertEquals("-", pieces[0].getValue());
+        assertEquals("operator", pieces[0].getKind());
+        assertEquals("0.5", pieces[1].getValue());
+        assertEquals("number", pieces[1].getKind());
+        assertEquals("constant", pieces[3].getKind());
+        assertEquals("e", pieces[3].getValue());
+        assertEquals("y", pieces[5].getValue());
+        assertEquals("variable", pieces[5].getKind());
+    }
+
+
+    /**
+     * Bad input: readEquation throws for a function with nothing after it.
+     */
+    public void testReadEquationBadFunctionThrows()
+    {
+        try
+        {
+            reader.readEquation("sin");
+            fail("Expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
             // expected
         }
     }
