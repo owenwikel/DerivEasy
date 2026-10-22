@@ -71,7 +71,7 @@ public class Main {
             }
             equation = reader.readEquation(next);
             try {
-                derivative = Differentiation.differentiate(equation);
+                derivative = Differentiation.differentiate(equation, "x");
                 simplified = simplifier.simplify(derivative);
                 System.out.println(simplifier.format(simplified));
             }
